@@ -1,2 +1,0 @@
-module z_server {
-}
