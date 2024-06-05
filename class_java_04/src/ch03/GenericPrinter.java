@@ -1,7 +1,6 @@
 package ch03;
 
 /**
- * 
  * @param <T> Material <br>
  * Material을 상속받은 자식 클래스만 대체 문자에 들어올 수 있다.
  */

@@ -69,16 +69,9 @@ public class SimpleHttpServer2 {
 
 		// GET 요청시 동작 만들기
 		private void handleGetRequest(HttpExchange exchange) throws IOException {
-			String response = """
-					<!DOCTYPE html>
-					<html lang=ko>
-						<head></head>
-						<body>
-							<h1 style="background-color:red"> Hello path by /test </h1>
-						</body>
-					</html>
-				""";
+			String response = "안녕하세요";
 			byte[] str = response.getBytes();
+			System.out.println(response.length());
 			exchange.sendResponseHeaders(200, response.length());
 			OutputStream os = exchange.getResponseBody();
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os));
