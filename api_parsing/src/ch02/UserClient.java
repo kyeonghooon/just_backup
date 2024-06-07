@@ -1,13 +1,16 @@
-package ch01;
+package ch02;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 public class UserClient {
 
@@ -25,9 +28,10 @@ public class UserClient {
 		}
 		br.close();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		User[] users = gson.fromJson(userJson.toString(), User[].class);
+		Type userType = new TypeToken<List<User>>() {}.getType();
+		List<User> userlist = gson.fromJson(userJson.toString(), userType);
 		System.out.println("HTTP CODE : " + responseCode);
-		System.out.println(gson.toJson(users));
+		System.out.println(gson.toJson(userlist.get(0)));
 	}
 
 }
