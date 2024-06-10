@@ -5,40 +5,42 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySQLJdbcExample {
 
 	public static void main(String[] args) {
-		
+
 		// 준비물
-		// 
+		//
 		String url = "jdbc:mysql://localhost:3306/mydb2?serverTimezone=Asia/Seoul";
 		String user = "root"; // 상용서비스에서 절대 루트 계정 사용 금지
 		String passoword = "asd123";
-		
+
 		// 필요 데이터 타입
 		// JDBC API 레벨(자바 개발자들이 개념화 시켜 놓은 클래스들이다.)
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		
+
 		// 1. MySQL 구현체를 사용하겠다는 설정을 해야 한다.
 		// JDBC 드라이버 로드 ( MySQL 구현 클래스를 로드)
 		try {
 			// 1. 메모리에 사용하는 드라이버(JDBC API를 구현한 클래스)클래스를 띄운다.
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			
+
 			// 2. 데이터 베이스 연결 설정
 			connection = DriverManager.getConnection(url, user, passoword);
-			
+
 			// 3. SQL 실행
-			statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement = connection.createStatement();
 			// 딱 2가지는 기억하자! 쿼리를 실행 시키는 메서드
 			resultSet = statement.executeQuery("SELECT * FROM employee"); // select 실행시 사용한다.
 			// statement.executeUpdate(""); --> insert, update, delete 사용
-			
+
 			// 구문 분석 -- 파싱
-			
+
 			// 4. 결과 처리
 //			while(resultSet.next()) {
 //				System.out.println("USER ID : " + resultSet.getInt("id"));
@@ -46,24 +48,20 @@ public class MySQLJdbcExample {
 //				System.out.println("USER NAME : " + resultSet.getString("department"));
 //				System.out.println("-----------------------------");
 //			}
-			resultSet.last();
-			Employee[] employees = new Employee[resultSet.getRow()];
-			for (int i = 0; i < employees.length; i++) {
-				resultSet.absolute(i + 1);
-				employees[i] = new Employee(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("department"));
+			List<Employee> employees = new ArrayList<>();
+			while (resultSet.next()) {
+				employees.add(new Employee(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("department")));
 			}
 			for (Employee employee : employees) {
 				System.out.println(employee);
 			}
-			
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
+
 	} // end of main
 
 } // end of class
