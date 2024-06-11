@@ -1,12 +1,15 @@
-package ch01;
+package ch02;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import ch01.Employee;
 
 public class MySQLJdbcExample {
 
@@ -33,28 +36,22 @@ public class MySQLJdbcExample {
 			// 2. 데이터 베이스 연결 설정
 			connection = DriverManager.getConnection(url, user, passoword);
 
-			// 3. SQL 실행
-			statement = connection.createStatement();
-			// 딱 2가지는 기억하자! 쿼리를 실행 시키는 메서드
-			resultSet = statement.executeQuery("SELECT * FROM employee"); // select 실행시 사용한다.
-			// statement.executeUpdate(""); --> insert, update, delete 사용
+			// 3. SQL 실행 (PreparedStatement 객체 사용해보기)
 
-			// 구문 분석 -- 파싱
+			// 3 - 1 쿼리 만들어 보기
+			String query = "INSERT INTO employee VALUES (?, ?, ?, ?, now())";
+			
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, 7);
+			preparedStatement.setString(2, "이순신");
+			preparedStatement.setString(3, "IT");
+			preparedStatement.setString(4, "5000000.00");
+			
+			// 실행의 호출은
+			int rowCount = preparedStatement.executeUpdate();
+			System.out.println("rowCount : " + rowCount);
 
 			// 4. 결과 처리
-//			while(resultSet.next()) {
-//				System.out.println("USER ID : " + resultSet.getInt("id"));
-//				System.out.println("USER NAME : " + resultSet.getString("name"));
-//				System.out.println("USER NAME : " + resultSet.getString("department"));
-//				System.out.println("-----------------------------");
-//			}
-			List<Employee> employees = new ArrayList<>();
-			while (resultSet.next()) {
-				employees.add(new Employee(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("department"), resultSet.getString("salary"), resultSet.getString("hire_date")));
-			}
-			for (Employee employee : employees) {
-				System.out.println(employee);
-			}
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
