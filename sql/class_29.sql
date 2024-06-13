@@ -70,13 +70,15 @@ WHERE c.category_name = '슬랙스' AND c.parent_id = (
 
 -- 특정 색상의 상품이 있는 모든 카테고리 조회 (서브쿼리 사용할 필요 없음)
 -- 예를 들어, '흰색' 상품이 있는 모든 카테고리를 조회하는 쿼리입니다.
-select *
-from tb_products
-where color = '샤인';
+SELECT c.*
+FROM tb_products AS p
+JOIN tb_categories AS c ON p.category_id = c.category_id
+WHERE color = '샤인';
 
 -- 가장 비싼 상품을 가진 카테고리 찾기 (서브쿼리 사용할 필요 없음)
 -- 각 카테고리 중 가장 비싼 상품을 가지고 있는 카테고리와 그 상품의 정보를 조회하는 쿼리입니다.
-select *
-from tb_products
-order by price desc
-limit 1;
+SELECT *
+FROM tb_products AS p
+JOIN tb_categories AS c ON p.category_id = c.category_id
+ORDER BY price DESC
+LIMIT 1;
